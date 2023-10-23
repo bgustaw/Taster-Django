@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load my_tags %}
+{% block content %}
+
+    <div class="ui three column centered grid">
+        <div class="column">
+
+            <form name="form" id="registerForm" autocomplete="off" class="ui form" action="{% url 'register' %}"
+                  method="post">
+                <div class="ui error message"></div>
+                {% csrf_token %}
+                {% for label in labels %}
+                    {% with fields|get:forloop.counter0 as field %}
+                        <div class="field">
+                            <label>{{ label }}</label>
+                            <div class="ui input">{{ form|get:field }}</div>
+                        </div>
+                     {% endwith %}
+                {% endfor %}
+                <div class="field">
+                    <label class="label">Country</label>
+                    <div class="ui fluid search selection dropdown">
+                        {{ form.country }}
+                        {% include 'country_drop_down.html' %}
+                    </div>
+                </div>
+                <div class="field">
+                    <input class="ui primary submit button" id="submit" value="Register" type="submit">
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        $('#submit').on('click', function () {
+            $('#registerForm').form('validate form')
+        })
+        let s_country = '{{ suggested_country }}'
+        $('.ui.dropdown').dropdown('set selected', s_country)
+    </script>
+    <script src="{% static 'registerFormValidation.js' %}"></script>
+
+{% endblock %}

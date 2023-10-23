@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+    <div class="ui three column centered grid">
+        <div class="column">
+            <form name="form" autocomplete="off" class="ui form" action="" method="post" id="editUser">
+                <div class="ui error message"></div>
+                {% csrf_token %}
+                <div class="field">
+                    <label>E-mail</label>
+                    <div class="ui input">{{ e_form.email }}</div>
+                </div>
+                <div class="field">
+                    <label>Username</label>
+                    <div class="ui input">{{ e_form.username }}</div>
+                </div>
+                <div class="field">
+                    <input class="ui primary button" id="submit" value="Update" type="submit">
+                </div>
+            </form>
+            <form name="form" autocomplete="off" class="ui form" action="" method="post" id="editPassword">
+                {% csrf_token %}
+                <div class="field">
+                    <label>Current password</label>
+                    <div class="ui input">{{ p_form.old_password }}</div>
+                </div>
+                <div class="field">
+                    <label>Password</label>
+                    <div class="ui input">{{ p_form.new_password1 }}</div>
+                </div>
+                <div class="field">
+                    <label>Password confirmation</label>
+                    <div class="ui input">{{ p_form.new_password2 }}</div>
+                </div>
+                <div class="field">
+                    <input class="ui primary button" id="submit" value="Update" type="submit">
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+    $('#submit').on('click', function () {
+        $(this).parent().form('validate form')
+    })
+    </script>
+    <script src="{% static 'registerFormValidation.js' %}"></script>
+
+{% endblock %}

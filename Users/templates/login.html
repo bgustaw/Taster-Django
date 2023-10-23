@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <div class="ui three column centered grid">
+        <div class="column">
+
+            <form class="ui form" autocomplete='off' action="{% url 'login_user' %}" method="post">
+                {% csrf_token %}
+
+                <div class="field">
+                    <label>E-mail</label>
+                    <div class="ui input">
+                        <input type="email" name="username">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label>Password</label>
+                    <div class="ui input">
+                        <input type="password" name="password">
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="control">
+                        <input class="ui primary button" value="Log in" type="submit">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+{% endblock %}

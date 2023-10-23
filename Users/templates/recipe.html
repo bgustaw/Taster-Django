@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load my_tags %}
+{% block title %}Taster - {{ recipe.name }}{% endblock %}
+{% block content %}
+
+    <div class="ui container" style="padding-top: 3em">
+        <div class="ui large header recipeHeader">{{ recipe.name }}</div>
+        <div class="ui two column grid">
+
+            <div class="column" style="border-right: 1px solid rgba(34,36,38,.15)">
+                <div class="ui fluid bordered rounded image" id="images">
+                    <a class="a" onclick="plusSlides(-1)"><i class="big arrow alternate circle left icon positionedL"></i></a>
+                    {% for img in all_images_paths %}
+                        <img class="slideImg fade right" src="/media/{{ img }}">
+                    {% endfor %}
+                    <a class="a" onclick="plusSlides(1)"><i class="big arrow alternate circle right icon positionedR"></i></a>
+                </div>
+                <div class="ui items">
+                    <div class="item" style="border-bottom: 1px solid rgba(34,36,38,.15); padding-bottom: 1.5em">
+                        <div class="middle aligned content">
+                            <span class="ui large text">Author:
+                                <a href="{% url 'recipes' username=username %}">{{ username }}</a></span>
+                            <span class="ui right floated large text">
+                                <a>{{ recipe.country }}</a><i class="{{ recipe.country.alpha2_code }} flag spanIcon"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="stepsDiv">
+                        <div class="item">
+                            <div class="middle aligned content">
+                                <span class="ui big text">Steps:</span>
+                                {% for step in steps_list %}
+                                    <div style="padding-block: 0.5em; padding-left: 0.5em">
+                                         <span class="ui large text">
+                                         {{ step }}
+                                         </span>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="column">
+                <div class="ui divided items" style="padding-top: 1.5em">
+                    {% if recipe.short_description %}
+                        <div class="item">
+                            <div class="middle aligned content">
+                                <span class="ui big text">{{ recipe.short_description }}</span>
+                            </div>
+                        </div>
+                    {% endif %}
+                    <div class="item">
+                        <div class="middle aligned content">
+                            <span class="ui big text">Portions: {{ recipe.portions }}</span>
+                        </div>
+                    </div>
+                    {% if diets|get:0|length > 1 %}
+                        <div class="item">
+                            <div class="middle aligned content">
+                                <span class="ui big text">Diets:
+                                    {% for diet in diets %}
+                                        <div class="ui big label">
+                                            {{ diet.capitalize }}
+                                        </div>
+                                    {% endfor %}
+                                </span>
+                            </div>
+                        </div>
+                    {% endif %}
+                    <div class="item">
+                        <div class="middle aligned content">
+                            <span class="ui big text">Preparation time: {{ recipe.prepare_time }}</span>
+                        </div>
+                    </div>
+                    {% if recipe.cooking_time|length > 5 %}
+                        <div class="item">
+                            <div class="middle aligned content">
+                                <span class="ui big text">Cooking time: {{ recipe.cooking_time }}</span>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {% if nutrition_per|length > 0 %}
+                        <div class="item">
+                            <div class="middle aligned content">
+                                <span class="ui big text">Nutrition per {{ nutrition_per }}:
+                                    <div class="ui four column grid" style="padding-top: 0.5em; margin-inline: 0">
+                                        {% for n in nutrition %}
+                                            {% if nutrition|get_value:forloop.counter0 != '-' %}
+                                                <div class="column" style="padding-inline: 0">
+                                                    {{ nutrition|get_value:forloop.counter0 }}g<br>
+                                                    <div class="ui pointing basic horizontal large label">
+                                                        {{ nutrition|get_key:forloop.counter0 }}
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </span>
+                            </div>
+                        </div>
+                    {% endif %}
+                    <div class="item">
+                        <div class="middle aligned content">
+                            <span class="ui big text">Ingredients:
+                                {% for ingredient in ingredients %}
+                                    <div style="padding-top: 0.5em; padding-left: 0.5em">• {{ ingredient }}</div>
+                                {% endfor %}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        $('#images').on('mouseover', function () {
+            $(this).find('a').stop().fadeIn('fast')
+        }).on('mouseout', function () {
+            $(this).find('a').stop().fadeOut('fast')
+        });
+    </script>
+    <script src="{% static 'slides.js' %}"></script>
+
+{% endblock %}

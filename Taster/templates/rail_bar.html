@@ -1,0 +1,129 @@
+{% load my_tags %}
+{% load static %}
+<div class="ui fluid vertical accordion menu">
+    <div class="item">
+        <h3 class="ui header">Sort by</h3>
+    </div>
+    <form class="ui form" method="post" id="filterForm">
+        {% for filter in filters %}
+            <div class="item">
+                <a class="title">
+                    <i class="dropdown icon"></i>
+                    <span style="font-size: initial">{{ filter }}</span>
+                </a>
+                <div class="content">
+                    {% if forloop.counter0 == 0 %}
+                        <div class="field">
+                            <div class="ui fluid multiple selection dropdown">
+                                <input type="hidden" id="continent-f">
+                                <i class="dropdown icon"></i>
+                                <div class="default text">Select continent</div>
+                                <div class="menu">
+                                    {% for cont in continent_dict %}
+                                        <div class="item" data-value="{{ continent_dict|get_value:forloop.counter0 }}">
+                                            <i class="{{ continent_dict|get_key:forloop.counter0 }} flag"></i>
+                                            {{ continent_dict|get_value:forloop.counter0 }}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="ui fluid multiple search selection dropdown">
+                                <input type="hidden" id="country-f">
+                                {% include 'country_drop_down.html' %}
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% if forloop.counter0 == 1 %}
+                        <div class="grouped fields">
+                            <div class="field">
+                                <div class="ui toggle checked checkbox" id="most-liked-f">
+                                    <input type="checkbox" checked tabindex="0" class="hidden">
+                                    <label>Most liked</label>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% if forloop.counter0 == 2 %}
+                        <div class="grouped fields">
+                            <div class="field">
+                                <div class="ui toggle checkbox" data-toggle-name="uploaded" id="newest-f">
+                                    <input type="radio" name="radio">
+                                    <label>Newest</label>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div class="ui toggle checkbox" data-toggle-name="uploaded" id="oldest-f">
+                                    <input type="radio" name="radio">
+                                    <label>Oldest</label>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% if forloop.counter0 == 3 %}
+                        <div class="ui labeled range slider" id="slider-range-portions"></div>
+                    {% endif %}
+                    {% if forloop.counter0 == 4 %}
+                        <div class="grouped fields">
+                            {% for diet in diets %}
+                                <div class="field">
+                                    <div class="ui checkbox" id="{{ diet }}" data-model-name="diet-filter">
+                                        <input type="checkbox">
+                                        <label>{{ diet }}</label>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    {% if forloop.counter0 == 5 %}
+                        <div class="field">
+                            <label>Hours</label>
+                            <div class="ui labeled slider" data-model-name="h" id="slider-full-h"></div>
+                        </div>
+                        <div class="field">
+                            <label>Minutes</label>
+                            <div class="ui labeled slider" data-model-name="min" id="slider-full-min"></div>
+                        </div>
+                    {% endif %}
+
+                </div>
+            </div>
+        {% endfor %}
+        <div class="item">
+            <div class="two ui buttons">
+                <button class="ui primary button" id="submit" type="button">Search</button>
+                <button class="ui orange button" id="reset" type="reset">Reset</button>
+            </div>
+        </div>
+    </form>
+
+</div>
+<script src="{% static 'filterForm.js' %}"></script>
+<script>
+    $('.ui.accordion')
+        .accordion()
+    ;
+    $('.ui.checkbox')
+        .checkbox({
+            uncheckable: true
+        })
+    ;
+
+    $('#continent-f').on('change', function () {
+        const countryMenu = $('#countryMenu')
+        if ($(this).val() !== '') {
+            let selected = $(this).val().split(',')
+            selected.forEach(function (cont) {
+                countryMenu.children().hide()
+                countryMenu.children(`[data-model-name="${cont}"]`).show()
+            })
+        }
+        if ($(this).val() === '') {
+            countryMenu.children().show()
+        }
+
+    })
+
+
+</script>

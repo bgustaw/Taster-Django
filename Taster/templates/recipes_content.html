@@ -1,0 +1,48 @@
+{% load static %}
+{% load my_tags %}
+
+
+<div class="ui three column grid">
+    {% for recipe in recipes %}
+        <div class="column">
+            <div class="ui fluid card">
+                <a class="ui slide masked reveal image"
+                   href="{% url 'recipe_name' username=recipe.publisher.username recipe_name=recipe.name %}">
+                    <img class="visible content imageCard"
+                         src="/media/{{ images_path|get:forloop.counter0|get:0 }}">
+                    <img class="hidden content imageCard"
+                         src="/media/{{ images_path|get:forloop.counter0|get:1 }}">
+                </a>
+                <span class="content" style="padding: 0.5em 0.5em">
+                    <span class="left floated icon spanText">
+                        <i class="{{ recipe.country.alpha2_code }} flag spanIcon"></i>{{ recipe.country }}
+                    </span>
+                    <span class="right floated like spanText">
+                        <span>{{ recipe.likes }}</span>
+                        {% if user.is_authenticated %}
+                            {% if recipe in user.get_liked_recipes %}
+                                <i class="like icon spanIcon liked" data-id="{{ recipe.id }}"></i>
+                            {% else %}
+                                <i class="like icon spanIcon" data-id="{{ recipe.id }}"></i>
+                            {% endif %}
+                        {% else %}
+                            <span data-tooltip="Only logged users can like recipes">
+                                <i class="like icon spanIcon" data-id="{{ recipe.id }}"></i>
+                            </span>
+                        {% endif %}
+                    </span>
+                </span>
+                <div class="content">
+                    <a class="header rh"
+                       href="{% url 'recipe_name' username=recipe.publisher.username recipe_name=recipe.name %}">
+                        {{ recipe.name }}
+                    </a>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+ {% if user.is_authenticated %}
+     <script src="{% static 'addLike.js' %}"></script>
+ {% endif %}

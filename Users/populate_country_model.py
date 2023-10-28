@@ -24,10 +24,13 @@ for index in range(len(df)):
     country = row['CLDR display name']
     continent = row['Continent']
     alpha2_code = row['ISO3166-1-Alpha-2']
-    if isinstance(alpha2_code, float):
-        alpha2_code = 'RR'
+    if isinstance(alpha2_code, float) and country == 'Namibia':
+        alpha2_code = 'na'
+    elif isinstance(alpha2_code, float):
+        continue
     else:
         alpha2_code = alpha2_code.lower()
 
     instance = Country(country=country, continent=continent, alpha2_code=alpha2_code)
     instance.save()
+

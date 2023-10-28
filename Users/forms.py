@@ -1,11 +1,8 @@
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, PasswordChangeForm
-from django.contrib.auth.models import User
 from django import forms
-from django.core.exceptions import ValidationError
 
 from Taster.models import Country
 from Users.models import CustomUser
-from django.forms import ModelForm
 
 
 class RegisterUserForm(UserCreationForm):

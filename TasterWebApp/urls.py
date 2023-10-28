@@ -8,10 +8,8 @@ from Users import views
 urlpatterns = [
     path('', include('Taster.urls')),
     path('user/', include('Users.urls')),
-    path('user/', include('django.contrib.auth.urls')),
     path('admin/ajax-request-reset', views.admin_ajax_request, name='admin_ajax'),
     path('admin/', admin.site.urls),
-    path("__debug__/", include("debug_toolbar.urls")),
 ]
 
 if settings.DEBUG:

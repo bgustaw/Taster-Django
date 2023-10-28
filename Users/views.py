@@ -11,12 +11,12 @@ from ipware import get_client_ip
 from Taster.models import Recipe
 from TasterWebApp import settings
 from .forms import RegisterUserForm, ChangePasswordForm, EditUserForm
-from Taster.views import COUNTRY_DICT
+from Taster.views import country_dict
 from .models import CustomUser
 
 
 def login_user(request):
-    global next_path, tup_path
+    global tup_path, next_path
     if request.method == 'GET':
         next_path = request.GET.get('next')
         tup_path = (next_path,)
@@ -62,7 +62,7 @@ def register_user(request):
         country = f'{g.country_code(client_ip).lower()}'
     fields_labels = ['E-mail', 'Username', 'Password', 'Password confirmation']
     form_fields = ("email", "username", "password1", "password2",)
-    context = {'form': form, 'country_dict': COUNTRY_DICT, 'labels': fields_labels, 'fields': form_fields,
+    context = {'form': form, 'country_dict': country_dict, 'labels': fields_labels, 'fields': form_fields,
                'suggested_country': country, 'sub_site_title': 'Register'}
     return render(request, 'register.html', context)
 
@@ -82,7 +82,7 @@ def edit_account(request, username):
                 update_session_auth_hash(request, user)
                 messages.success(request, 'Password successfully updated')
             else:
-                server_errors = form1.errors
+                server_errors = form1.errors.values()
                 message = ''
                 for error in server_errors:
                     message += error
@@ -95,7 +95,7 @@ def edit_account(request, username):
                 user = form2.save()
                 username = user.username
             else:
-                server_errors = form2.errors
+                server_errors = form2.errors.values()
                 message = ''
                 for error in server_errors:
                     message += error

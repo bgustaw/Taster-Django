@@ -1,5 +1,3 @@
-from Taster.models import Recipe
-
 
 def time_parser(prep_time, cook_time='H'):
     """ Parses and returns full time in minutes required for Recipe """
@@ -50,7 +48,6 @@ def transform_value(key, value):
             return query_part
         case 'full_time':
             # filter
-            print('value', value)
             value = time_parser(value)
             query_part = f'.filter(full_time__lte={value})'
             return query_part

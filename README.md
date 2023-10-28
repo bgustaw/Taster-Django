@@ -1,5 +1,5 @@
 
-# Django Taster
+# Taster - Django Web Application
 
 Recipe book web application - allows to add own recipes, see other users recipes, like and filter them.
 

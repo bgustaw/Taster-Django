@@ -1,0 +1,34 @@
+.AF::before {
+    background-image: url("png/AF.png");
+    background-size: contain;
+}
+
+.NA::before {
+    background-image: url("png/NA.png");
+    background-size: contain;
+}
+
+.OC::before {
+    background-image: url("png/OC.png");
+    background-size: contain;
+}
+
+.AN::before {
+    background-image: url("png/AN.png");
+    background-size: contain;
+}
+
+.AS::before {
+    background-image: url("png/AS.png");
+    background-size: contain;
+}
+
+.EU::before {
+    background-image: url("png/EU.png");
+    background-size: contain;
+}
+
+.SA::before {
+    background-image: url("png/SA.png");
+    background-size: contain;
+}

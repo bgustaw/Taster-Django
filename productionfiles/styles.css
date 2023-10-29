@@ -1,0 +1,142 @@
+textarea::-webkit-scrollbar {
+    width: 0;
+}
+.textArea {
+    height: 8em;
+}
+.txtArea {
+    height: 8em;
+}
+
+.ui.menu .item>i.icon {
+  margin: 0 0.35714286em 0 0.35714286em;
+}
+
+.equalDropdown {
+    min-width: 10em !important;
+}
+.inheritedWidth {
+    width: inherit !important;
+}
+
+[value="photo"]:hover {
+    cursor: pointer;
+}
+
+.hiddenM {
+    display: none;
+}
+
+.imagesCentered {
+    align-self: center;
+}
+
+.respForm {
+    padding-block: 1em;
+    margin-inline: auto;
+}
+
+.imageCard {
+    min-height: 20em;
+    max-height: 20em;
+    object-fit: contain;
+}
+
+.cardContent {
+    padding: 0.5em 1em
+}
+
+.static {
+     position: absolute !important;
+    background-color: white;
+}
+
+.static:hover {
+    opacity: 0;
+}
+
+.spanIcon {
+    font-size: x-large !important;
+}
+
+.spanIcon:hover {
+    color: red !important;
+    opacity: 1 !important;
+}
+
+.liked {
+    color: red !important;
+    opacity: 1 !important;
+}
+
+.spanText {
+    font-size: 1.3em ;
+}
+
+.recipeHeader {
+    font-size: xxx-large !important;
+    text-align: center;
+}
+
+.siteTitle {
+    font-size: xx-large !important;
+    text-align: center;
+}
+
+.stepsDiv {
+    padding-block: 1.5em;
+    min-width: 50%;
+    max-width: 100%;
+}
+
+.positionedR {
+    position: absolute;
+    z-index: 1;
+    right: 0;
+    bottom: 45%;
+    color: rgb(232, 232, 232, 0.66);
+}
+
+.positionedL {
+    position: absolute;
+    z-index: 1;
+    left: 0;
+    bottom: 45%;
+    padding-left: 0.25em;
+    color: rgba(232, 232, 232, 0.66);
+}
+
+.a {
+    display: none;
+}
+
+.a :hover{
+    color: #e8e8e8;
+    cursor: pointer;
+}
+
+.slideImg {
+    display: none;
+    min-height: 35em;
+    max-height: 35em;
+    object-fit: contain;
+}
+
+.rh {
+    font-size: xx-large !important;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap
+}
+
+.fade {
+  animation-name: fade;
+  animation-duration: 0.5s;
+}
+
+
+@keyframes fade {
+  from {opacity: .6}
+  to {opacity: 1}
+}
+

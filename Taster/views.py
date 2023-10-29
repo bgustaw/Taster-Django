@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.db import OperationalError, ProgrammingError
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, QueryDict
 from django.contrib.auth.decorators import login_required
@@ -14,7 +15,14 @@ DIETS_DATA = ('Vegan', 'Vegetarian', 'Keto', 'Gluten-free', 'Sugar-free', 'Lacto
 FILTERS = ('Region', 'Popularity', 'Upload date', 'Portions', 'Diets', 'Time needed')
 CONTINENT_DICT = {'AF': 'Africa', 'NA': 'North America', 'OC': 'Oceania', 'AS': 'Asia', 'EU': 'Europe',
                   'SA': 'South America', 'AN': 'Antarctica'}
-country_dict = {c.alpha2_code: c.country for c in Country.objects.all()}
+try:
+    country_dict = {c.alpha2_code: c.country for c in Country.objects.all()}
+except (OperationalError, ProgrammingError) as e:
+    country_dict = []
+
+
+def view_404(request, exception=None):
+    return redirect('home')
 
 
 def home(request):
@@ -51,7 +59,7 @@ def filter_view(request):
         filtered_recipes = eval(new_queue)
         images_path = [(r.images.all()[0].image_file, r.images.all()[1].image_file) for r in filtered_recipes]
         return render(request, 'recipes_content.html', {'recipes': filtered_recipes,
-                      'images_path': images_path})
+                                                        'images_path': images_path})
 
 
 def search_view(request):
@@ -60,7 +68,7 @@ def search_view(request):
         recipes = Recipe.objects.filter(name__contains=value)
         images_path = [(r.images.all()[0].image_file, r.images.all()[1].image_file) for r in recipes]
         return render(request, 'recipes_content.html', {'recipes': recipes, 'images_path':
-                      images_path})
+            images_path})
 
 
 @login_required

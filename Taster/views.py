@@ -18,7 +18,7 @@ CONTINENT_DICT = {'AF': 'Africa', 'NA': 'North America', 'OC': 'Oceania', 'AS': 
 try:
     country_dict = {c.alpha2_code: c.country for c in Country.objects.all()}
 except (OperationalError, ProgrammingError) as e:
-    country_dict = []
+    country_dict = {}
 
 
 def view_404(request, exception=None):
@@ -113,6 +113,7 @@ def add_recipe(request):
             image.save()
             recipe.images.add(image)
 
+        messages.success(request, 'Recipe has been successfully added')
         redirect('add_recipe')
 
     # context data

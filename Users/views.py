@@ -101,8 +101,10 @@ def edit_account(request, username):
                     message += error
                 messages.error(request, message)
             return redirect('edit_account', username)
-
-    user = CustomUser.objects.get(username=username)
+    user = request.user
+    if username != user.username:
+        messages.error(request, 'Forbidden request - navigate with top menu')
+        return redirect('home')
     edit_user_form = EditUserForm(instance=user)
     password_change_form = ChangePasswordForm(user=user)
     context = {'user': user, 'e_form': edit_user_form, 'p_form': password_change_form, 'sub_site_title': 'Edit account'}

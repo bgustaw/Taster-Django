@@ -234,7 +234,7 @@
         ;
 
         $('#nutrFlag').on('change', function () {
-            if ($('#nutrFlag').attr('value')) {
+            if ($(this).attr('value')) {
                 $('.hiddenM').show()
             } else {
                 $('.hiddenM').hide()
@@ -249,16 +249,18 @@
             }
         });
 
+        $('[name="nutrition"]').on('change', function () {
+            if ($(this).val() < 0) {
+                $(this).val('')
+            }
+        })
+
         $('.dummy').on('change', function () {
             if ($(this).attr('name') === 'prepTimeDelta' && $('#pTDM').val() === '') {
-                $('#pTDM').val('0')
-                $('#pTDM').siblings('.text').text('0')
-                $('#pTDM').siblings('.menu').children("[data-value='0']").attr('class', 'item active selected')
+                $('#pTDM').val('0').siblings('.text').text('0').siblings('.menu').children("[data-value='0']").attr('class', 'item active selected')
             }
             if ($(this).attr('name') === 'cookTimeDelta' && $('#cTDM').val() === '') {
-                $('#cTDM').val('0')
-                $('#cTDM').siblings('.text').text('0')
-                $('#cTDM').siblings('.menu').children("[data-value='0']").attr('class', 'item active selected')
+                $('#cTDM').val('0').siblings('.text').text('0').siblings('.menu').children("[data-value='0']").attr('class', 'item active selected')
             }
         })
 
@@ -267,7 +269,7 @@
             $('[name="shortDesc"]').css({"height": "6em", "min-height": "6em"});
         })
 
-        $('[name="steps"]').on('input', function () {
+        $('[name="step"]').on('input', function () {
             this.style.height = 'auto';
             this.style.height =
                 (this.scrollHeight) + 'px';

@@ -1,6 +1,10 @@
 import io
 from pathlib import Path
 import os
+from urllib.parse import urlparse
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 from django.contrib.messages import constants as messages
 from dotenv import load_dotenv
 import dj_database_url
@@ -52,7 +56,6 @@ SECRET_KEY = env("SECRET_KEY")
 # Change this to "False" when you are ready for production
 DEBUG = env("DEBUG")
 
-
 # [START gaestd_py_django_csrf]
 # SECURITY WARNING: It's recommended that you use this when
 # running in production. The URL will be known once you first deploy
@@ -73,8 +76,15 @@ else:
 LOGIN_URL = '/user/login_user'
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
-# Application definition
 
+# adding config
+cloudinary.config(
+    cloud_name=env("CLOUD_NAME"),
+    api_key=env("API_KEY"),
+    api_secret=env("API_SECRET")
+)
+
+# Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -84,6 +94,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'Taster',
     'Users',
+    'cloudinary',
 ]
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -154,8 +165,6 @@ if os.getenv("TRAMPOLINE_CI", None):
         }
     }
 
-
-
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
@@ -174,6 +183,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
+ADMINS = [('Bartosz', 'bartoszgustaw@gmail.com')]
+
 AUTH_USER_MODEL = "Users.CustomUser"
 
 LANGUAGE_CODE = 'en-us'
@@ -186,9 +197,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
-STATICFILES_DIRS = [
-    BASE_DIR / 'static/'
-]
+STATICFILES_DIRS = []
 
 STATIC_ROOT = BASE_DIR / 'static'
 

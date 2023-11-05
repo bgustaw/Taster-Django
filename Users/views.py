@@ -1,4 +1,5 @@
 import os
+import sys
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -114,8 +115,7 @@ def edit_account(request, username):
 def recipes(request, username):
     user = CustomUser.objects.get(username=username)
     user_recipes = Recipe.objects.filter(publisher=user)
-    images_path = [(r.images.all()[0].image_file, r.images.all()[1].image_file) for r in user_recipes]
-    context = {'recipes': user_recipes, 'images_path': images_path}
+    context = {'recipes': user_recipes}
     if request.user.pk == user.pk:
         context['sub_site_title'] = 'My recipes'
     else:
@@ -126,39 +126,36 @@ def recipes(request, username):
 def favourites(request):
     user: CustomUser = request.user
     user_favourites = user.get_liked_recipes()
-    images_path = [(r.images.all()[0].image_file, r.images.all()[1].image_file) for r in user_favourites]
-    context = {'user': user, 'images_path': images_path, 'recipes': user_favourites, 'sub_site_title': 'Favourites'}
+    context = {'user': user, 'recipes': user_favourites, 'sub_site_title': 'Favourites'}
     return render(request, "recipe_view_manager.html", context)
 
 
 def recipe(request, username, recipe_name):
-    context = {}
-    recipe_cls = Recipe.objects.get(name=recipe_name)
-    if recipe_cls.diets is not None:
-        diets = recipe_cls.diets.split(',')
-        context['diets'] = diets
-    if recipe_cls.nutrition_data is not None:
-        nutrition = recipe_cls.nutrition_data.split(' | ')
-        nutrition_per = nutrition[0]
-        context['nutrition_per'] = nutrition_per
-        nutrition.pop(0)
-        nutrition_names = ('kcal', 'fat', 'saturates', 'carbs', 'sugars', 'fibre', 'protein', 'salt')
-        nutrition = {nutrition_names[i]: nutrition[i] for i in range(len(nutrition_names))}
-        context.update({'nutrition': nutrition})
+    try:
+        context = {}
+        recipe_cls = Recipe.objects.get(name=recipe_name)
+        if len(recipe_cls.diets) != 0:
+            diets = recipe_cls.diets.split(',')
+            context['diets'] = diets
+        if len(recipe_cls.nutrition_data) != 0:
+            nutrition = recipe_cls.nutrition_data.split(' | ')
+            context['nutrition_per'] = nutrition[0]
+            nutrition.pop(0)
+            nutrition_names = ('kcal', 'fat', 'saturates', 'carbs', 'sugars', 'fibre', 'protein', 'salt')
+            nutrition = {nutrition_names[i]: nutrition[i] for i in range(len(nutrition_names))}
+            context.update({'nutrition': nutrition})
 
-    ingredients = recipe_cls.ingredients.split(' | ')
-    all_images_paths = [img.image_file for img in recipe_cls.images.all()]
+        ingredients = recipe_cls.ingredients.split(' | ')
+        all_images_paths = [img.image_file.url for img in recipe_cls.images.all()]
 
-    temp_list = str(recipe_cls.steps.text_file).split('/')
-    path = os.path.join(settings.MEDIA_ROOT, temp_list[0], temp_list[1])
-
-    with open(path, 'r', encoding='utf-8') as file_open:
-        steps_list = file_open.readlines()
+        steps_list = recipe_cls.steps.split('&')
         context['steps_list'] = steps_list
 
-    context2 = {'recipe': recipe_cls, 'all_images_paths': all_images_paths, 'username': username,
-                'ingredients': ingredients}
-    context.update(context2)
+        context2 = {'recipe': recipe_cls, 'all_images_paths': all_images_paths, 'username': username,
+                    'ingredients': ingredients}
+        context.update(context2)
+    except Exception:
+        return render(request, 'error.html')
 
     return render(request, 'recipe.html', context=context)
 

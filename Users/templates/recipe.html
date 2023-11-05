@@ -11,8 +11,8 @@
             <div class="column" style="border-right: 1px solid rgba(34,36,38,.15)">
                 <div class="ui fluid bordered rounded image" id="images">
                     <a class="a" onclick="plusSlides(-1)"><i class="big arrow alternate circle left icon positionedL"></i></a>
-                    {% for img in all_images_paths %}
-                        <img class="slideImg fade right" src="/media/{{ img }}">
+                    {% for img_path in all_images_paths %}
+                        <img class="slideImg fade right" src="{{ img_path }}">
                     {% endfor %}
                     <a class="a" onclick="plusSlides(1)"><i class="big arrow alternate circle right icon positionedR"></i></a>
                 </div>

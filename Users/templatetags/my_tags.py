@@ -12,6 +12,11 @@ def get_continent(self):
 
 
 @register.filter
+def get_image(self, i):
+    return self.images.all()[i].image_file.url
+
+
+@register.filter
 def get(self, i):
     return self[i]
 

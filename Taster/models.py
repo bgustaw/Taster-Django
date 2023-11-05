@@ -1,23 +1,13 @@
 from django.db import models
 from django.utils import timezone
-from django.contrib.auth import get_user_model
 from TasterWebApp import settings
+from cloudinary.models import CloudinaryField
 
 
 class FoodImage(models.Model):
     filename = models.CharField(max_length=100)
-    image_file = models.ImageField(upload_to='images/')
+    image_file = CloudinaryField('image')
     recipe = models.ForeignKey('Recipe', blank=False, null=True, on_delete=models.CASCADE)
-    publisher = models.ForeignKey(settings.AUTH_USER_MODEL, blank=False, null=True, on_delete=models.SET_NULL)
-
-    def __str__(self):
-        return self.filename
-
-
-class StepsFile(models.Model):
-    filename = models.CharField(max_length=100)
-    text_file = models.FileField(null=True, upload_to='recipes/')
-    recipeS = models.ForeignKey('Recipe', blank=False, null=True, on_delete=models.CASCADE)
     publisher = models.ForeignKey(settings.AUTH_USER_MODEL, blank=False, null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
@@ -44,7 +34,7 @@ class Recipe(models.Model):
     images = models.ManyToManyField(FoodImage, blank=False, related_name='recipes')
     ingredients = models.TextField(blank=False, null=True)
     short_description = models.TextField(blank=True, null=True)
-    steps = models.OneToOneField(StepsFile, blank=False, null=True, on_delete=models.CASCADE)
+    steps = models.TextField(blank=False, null=True)
     country = models.ForeignKey(Country, blank=True, null=True, on_delete=models.SET_NULL)
     upload_date = models.DateTimeField(default=timezone.now)
     publisher = models.ForeignKey(settings.AUTH_USER_MODEL, blank=False, null=True, on_delete=models.SET_NULL)

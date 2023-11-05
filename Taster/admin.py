@@ -4,14 +4,9 @@ from.models import *
 
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'publisher', 'upload_date', 'steps', 'diets', 'portions', 'likes')
+    list_display = ('name', 'publisher', 'upload_date', 'diets', 'portions', 'likes')
     ordering = ('upload_date',)
     search_fields = ('name', )
-
-
-@admin.register(StepsFile)
-class StepsAdmin(admin.ModelAdmin):
-    list_display = ('filename', 'text_file', 'publisher')
 
 
 @admin.register(FoodImage)

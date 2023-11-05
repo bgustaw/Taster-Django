@@ -9,9 +9,9 @@
                 <a class="ui slide masked reveal image"
                    href="{% url 'recipe_name' username=recipe.publisher.username recipe_name=recipe.name %}">
                     <img class="visible content imageCard"
-                         src="/media/{{ images_path|get:forloop.counter0|get:0 }}">
+                         src="{{ recipe|get_image:0 }}">
                     <img class="hidden content imageCard"
-                         src="/media/{{ images_path|get:forloop.counter0|get:1 }}">
+                         src="{{ recipe|get_image:1 }}">
                 </a>
                 <span class="content" style="padding: 0.5em 0.5em">
                     <span class="left floated icon spanText">

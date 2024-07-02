@@ -1,0 +1,19 @@
+{% load my_tags %}
+
+
+<i class="dropdown icon"></i>
+<div class="default text">Select country</div>
+<div class="menu" id="countryMenu">
+    {% for country in country_dict %}
+        {% with country|get_continent as continent %}
+        <div class="item" data-model-name="{{ continent }}" data-value="{{ country_dict|get_key:forloop.counter0 }}">
+            <i class="{{ country_dict|get_key:forloop.counter0 }} flag"></i>{{ country_dict|get_value:forloop.counter0 }}</div>
+        {% endwith %}
+    {% endfor %}
+</div>
+
+<script>
+    $('.selection.dropdown')
+        .dropdown()
+    ;
+</script>

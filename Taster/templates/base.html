@@ -1,0 +1,58 @@
+{% load my_tags %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+        {% block title %}
+            Taster
+            {% if sub_site_title %}
+                - {{ sub_site_title }}
+            {% endif %}
+        {% endblock %}
+    </title>
+    <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'my_icons.css' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.svg' %}">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.9.3/dist/semantic.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.9.3/dist/semantic.min.js"></script>
+</head>
+<body>
+{% include 'top_bar.html' %}
+<div class="ui two column centered grid">
+    <div class="column" id="mainCenterColumn">
+        <div class="ui large header siteTitle">{{ sub_site_title }}</div>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="ui {{ message.tags }} message">
+                    <i class="close icon"></i>
+                    <div class="header" id="msgHeader">
+                        {{ message }}
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+</div>
+
+
+{% block content %}
+
+{% endblock %}
+
+<script>
+    $('.message .close')
+        .on('click', function () {
+            $(this)
+                .closest('.message')
+                .transition('fade')
+            ;
+        });
+
+</script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+{% load static %}
+<div class="ui wide container">
+
+    <div class="ui secondary large menu">
+
+        <div class="item">
+            <a href="{% url 'home' %}">
+                <img src="{% static 'taster.png' %}" class="ui small image">
+            </a>
+        </div>
+        {% if request.path == '/' %}
+            <div class="item">
+                <div class="ui icon input" id="searchBar">
+                    {% csrf_token %}
+                    <input type="text" id="search" placeholder="Search...">
+                    <i class="search link icon" id="searchBtn"></i>
+                </div>
+            </div>
+        {% endif %}
+        <div class="right menu" id="rightMenu">
+            {% if user.is_authenticated %}
+                <div class="item" id="addR">
+                    <a class="ui item" href="{% url 'add_recipe' %}">
+                        Add recipe
+                    </a>
+                </div>
+                <div class="item">
+                    <a class="ui item" href="{% url 'recipes' username=user.username %}">
+                        My recipes
+                    </a>
+                </div>
+                <div class="item">
+                    <div class="ui compact menu">
+                        <div class="ui simple dropdown item" style="margin-inline: 0">
+                            My account
+                            <i class="user icon"></i>
+                            <div class="ui vertical menu">
+                                <a class="link item" href="{% url 'favourites' %}">Favourites</a>
+                                <a class="link item" href="{% url 'edit_account' username=user.username %}">Edit account
+                                </a>
+                                <div class="divider"></div>
+                                <a class="link item" href="{% url 'logout' %}">Log out</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="item">
+                    <a class="ui primary button" href="{% url 'login_user' %}">Log in</a>
+                </div>
+                <div class="item">
+                    <a class="ui primary button" href="{% url 'register' %}">Sign up</a>
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+{% if request.path == '/' %}
+    <script src="{% static 'searchBar.js' %}"></script>
+{% endif %}

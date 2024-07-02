@@ -1,0 +1,74 @@
+{% extends 'admin/index.html' %}
+
+
+{% block sidebar %}
+
+    <style>
+        #myContent {
+            float: right;
+            width: 260px;
+            position: relative;
+            margin-right: -600px
+        }
+
+        .myBtn {
+            margin-block: 1em;
+        }
+
+        .myMessage {
+            float: right;
+            width: 260px;
+            position: relative;
+            margin-right: -900px;
+            background-color: var(--message-success-bg);
+            padding: inherit;
+            display: none;
+            margin-top: 1em;
+            border-radius: 10px;
+            font-size: initial;
+        }
+
+
+
+    </style>
+
+    {{ block.super }}
+
+    <div class="myMessage">
+        <span></span>
+    </div>
+
+    <div id="myContent">
+        <button data-id="resetLikes" class="button myBtn">Reset recipes likes</button>
+        <button data-id="resetUsersLiked" class="button myBtn">Reset users liked recipes</button>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+    <script>
+
+        $('.myBtn').on('click', function () {
+            let btnID;
+            let msgDiv = $('.myMessage')
+            btnID = $(this).attr('data-id')
+            $.ajax(
+                {
+                    type: 'GET',
+                    url: '/admin/ajax-request-reset',
+                    data: {
+                        action: btnID
+                    },
+                    success: function (data) {
+                        $(msgDiv).fadeIn(100)
+                        $(msgDiv).find('span').text(data);
+                        setTimeout(function() { $(msgDiv).fadeOut(); }, 5000);
+                    }
+
+                }
+            )
+        })
+
+
+    </script>
+
+{% endblock %}

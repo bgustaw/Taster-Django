@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load my_tags %}
+
+{% block content %}
+    <div class="ui container">
+
+        <div class="ui basic segment" style="padding: 0" id="context">
+
+            {% if filters %}
+                <div class="ui right rail" style="padding-top: 1rem">
+                    <div class="ui basic segment" style="padding: 0">
+                        {% include 'rail_bar.html' %}
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if not recipes %}
+                <div class="ui placeholder basic segment" style="margin-inline: auto; max-width: max-content">
+                    {% if sub_site_title == "Favourites" %}
+                        <a href="{% url 'home' %}">
+                            <h2 class="ui icon header">
+                                <img class="ui image" id="favImg" src="{% static 'recipe-book.png' %}"
+                                     style="width: 4.5em;">
+                                <div class="content">
+                                    Like a recipe to see it in favourites
+                                </div>
+                            </h2>
+                        </a>
+                    {% else %}
+                        <a href="{% url 'add_recipe' %}">
+                            <h2 class="ui icon header">
+                                <img class="ui image" id="myImg" src="{% static 'plus.png' %}" style="width: 4.5em;">
+                                <div class="content">
+                                    Add recipe to see it in My recipes
+                                </div>
+                            </h2>
+                        </a>
+                    {% endif %}
+                </div>
+            {% else %}
+                {% csrf_token %}
+                <div id="recipe_body">
+                    {% include 'recipes_content.html' %}
+                </div>
+                <div id="error"></div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        $("#favImg").hover(
+            function () {
+                $(this).attr("src", "{% static 'recipe-book.gif' %}");
+            },
+            function () {
+                $(this).attr("src", "{% static 'recipe-book.png' %}");
+            }
+        );
+        $("#myImg").hover(
+            function () {
+                $(this).attr("src", "{% static 'plus.gif' %}");
+            },
+            function () {
+                $(this).attr("src", "{% static 'plus.png' %}");
+            }
+        );
+
+    </script>
+{% endblock %}

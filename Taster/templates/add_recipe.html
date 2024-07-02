@@ -1,0 +1,279 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+            <form name="addRecipeForm" id="addRecipeForm" autocomplete="off" class="ui equal width form respForm"
+                  action="{% url 'add_recipe' %}" method="post" enctype="multipart/form-data"
+                  style="max-width: min-content; min-width: min-content;">
+                {% csrf_token %}
+                <div class="ui error message"></div>
+                <div class="fields">
+                    <div class="required field">
+                        <label>Meal name:</label>
+                        <div class="ui input">
+                            <input class="input" maxlength="20" name="mealName">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="fields">
+                    <div class="required field">
+                        <label>Portions:</label>
+                        <div class="ui input">
+                            <input class="input" min="1" max="20" type="number" name="portions" id="portions">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Diets:</label>
+                        <div class="ui multiple selection dropdown">
+                            <input name="diets" type="hidden">
+                            <div class="default text">Select diets</div>
+                            <div class="menu">
+                                {% for diet in diets %}
+                                    <div class="item" value="{{ diet }}">{{ diet }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="fields">
+                    <input type="hidden" id="parsedCookTimeDelta" name="parsedCookTimeDelta">
+                    <div class="required field">
+                        <input type="hidden" id="parsedPrepTimeDelta" name="parsedPrepTimeDelta">
+                        <label>Preparation time:</label>
+                        <div class="ui right labeled input">
+                            <div class="ui selection dropdown equalDropdown">
+                                <input type="hidden" class="dummy" name="prepTimeDelta">
+                                <i class="dropdown icon"></i>
+                                <div class="default text">Hours</div>
+                                <div class="menu">
+                                    {% for h in hours %}
+                                        <div class="item" data-value="{{ h }}">{{ h }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="ui label">Hours</div>
+                        </div>
+                    </div>
+                    <div class="required field">
+                        <label></label>
+                        <div class="ui right labeled input">
+                            <div class="ui selection dropdown equalDropdown">
+                                <input type="hidden" id="pTDM" name="prepTimeDelta">
+                                <i class="dropdown icon"></i>
+                                <div class="default text">Minutes</div>
+                                <div class="menu">
+                                    {% for m in minutes %}
+                                        <div class="item" data-value="{{ m }}">{{ m }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="ui label">Minutes</div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Cooking time:</label>
+                        <div class="ui right labeled input">
+                            <div class="ui selection dropdown equalDropdown">
+                                <input type="hidden" class="dummy" name="cookTimeDelta">
+                                <i class="dropdown icon"></i>
+                                <div class="default text">Hours</div>
+                                <div class="menu">
+                                    {% for h in hours %}
+                                        <div class="item" data-value="{{ h }}">{{ h }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="ui label">Hours</div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label></label>
+                        <div class="ui right labeled input">
+                            <div class="ui selection dropdown equalDropdown">
+                                <input type="hidden" id="cTDM" name="cookTimeDelta">
+                                <i class="dropdown icon"></i>
+                                <div class="default text">Minutes</div>
+                                <div class="menu">
+                                    {% for m in minutes %}
+                                        <div class="item" data-value="{{ m }}">{{ m }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="ui label">Minutes</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="fields">
+
+                    <div class="field">
+                        <input type="hidden" id="parsedNutritionData" name="parsedNutritionData">
+                        <label>Nutrition per:</label>
+                        <div class="ui selection dropdown">
+                            <input type="hidden" name="perNutrition" id="nutrFlag">
+                            <i class="dropdown icon"></i>
+                            <div class="default text">/</div>
+                            <div class="menu">
+                                <div class="item" data-value="">/</div>
+                                <div class="item" data-value="serving">/serving</div>
+                                <div class="item" data-value="100g">/100g</div>
+                            </div>
+                        </div>
+                    </div>
+                    {% for nutr in nutrition_data %}
+                        <div class="field hiddenM">
+                            <label>{{ nutr.capitalize }}:</label>
+                            <div class="ui input">
+                                <input class="inheritedWidth" type="number" step="any" min="0" placeholder="/grams"
+                                       name="nutrition" id="{{ nutr }}" value="" style="padding-inline: 0.7em">
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="fields">
+                    <input type="hidden" value="0" id="imgValidate">
+                    <div class="attached required field" id="imagesField">
+                        <label>Please add some photos:</label>
+                        <div class="ui grid" id="columns">
+                            <div class="four wide column" id="col1">
+                                <input type="file" id="addImage" class="ui invisible file input" name="file"
+                                       accept="image/jpeg, image/png">
+                                <label for="addImage">
+                                    <div class="ui segment" style="height: 180px; cursor: pointer">
+                                        <i class="grey fitted huge plus icon"
+                                           style="display: block;padding-top: 40px;"></i>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="ingredientsField">
+                    <input type="hidden" id="parsedIngredients" name="parsedIngredients">
+                    {% for field in repeat %}
+                        <div class="fields" id="ingRow{{ field }}">
+                            <div class="required field">
+                                {% if field != 1 %}
+                                    <div class="ui action input">
+                                        <input class="input" type="text" maxlength="140" name="ingredients">
+                                        <button class="ui icon button" type="button" name="del"
+                                                onclick="{$(this).closest('.fields').remove();}">
+                                            <i class="close icon"></i>
+                                        </button>
+                                    </div>
+                                {% else %}
+                                    <label>Ingredients:</label>
+                                    <div class="ui input">
+                                        <input class="input" maxlength="140" name="ingredients">
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="fields">
+                    <div class="field">
+                        <button class="ui fluid icon button" type="button" id="addRow"
+                                onclick="addFieldToIngredients()">
+                            <i class="plus icon"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="fields">
+                    <div class="field">
+                        <label>Short description:</label>
+                        <textarea name="shortDesc" style="resize: none"></textarea>
+                    </div>
+                </div>
+                <div id="stepsField">
+                    <input type="hidden" id="parsedSteps" name="parsedSteps">
+                    <div class="fields" id="firstStepField">
+                        <div class="required field">
+                            <label>Steps:</label>
+                            <div class="ui input">
+                                <textarea name="step" style="resize: none">1. </textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="fields">
+                    <div class="field">
+                        <button class="ui fluid icon button" type="button" id="addRow"
+                                onclick="addFieldToSteps()">
+                            <i class="plus icon"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="fields">
+                    <div class="field">
+                        <input class="big fluid ui primary button" value="Submit" type="submit">
+                    </div>
+                </div>
+
+            </form>
+
+
+    <script src="{% static 'addRFormValidation.js' %}"></script>
+    <script src="{% static 'addRFormParser.js' %}"></script>
+    <script src="{% static 'myScript.js' %}"></script>
+
+    <script>
+        $('.selection.dropdown')
+            .dropdown()
+        ;
+        $('.ui.search.selection.dropdown')
+            .dropdown({
+                keepSearchTerm: true
+            })
+        ;
+        $('#multi-select')
+            .dropdown()
+        ;
+
+        $('#nutrFlag').on('change', function () {
+            if ($('#nutrFlag').attr('value')) {
+                $('.hiddenM').show()
+            } else {
+                $('.hiddenM').hide()
+            }
+        });
+
+        $('#portions').on('change', function () {
+            if ($(this).val() > 20) {
+                $(this).val(20)
+            } else if ($(this).val() < 1){
+                $(this).val(1)
+            }
+        });
+
+        $('.dummy').on('change', function () {
+            if ($(this).attr('name') === 'prepTimeDelta' && $('#pTDM').val() === '') {
+                $('#pTDM').val('0')
+                $('#pTDM').siblings('.text').text('0')
+                $('#pTDM').siblings('.menu').children("[data-value='0']").attr('class', 'item active selected')
+            }
+            if ($(this).attr('name') === 'cookTimeDelta' && $('#cTDM').val() === '') {
+                $('#cTDM').val('0')
+                $('#cTDM').siblings('.text').text('0')
+                $('#cTDM').siblings('.menu').children("[data-value='0']").attr('class', 'item active selected')
+            }
+        })
+
+        $(document).ready(function () {
+            $('[name="step"]').css('height', '8em');
+            $('[name="shortDesc"]').css({"height": "6em", "min-height": "6em"});
+        })
+
+        $('[name="steps"]').on('input', function () {
+            this.style.height = 'auto';
+            this.style.height =
+                (this.scrollHeight) + 'px';
+        });
+
+
+    </script>
+
+{% endblock %}
